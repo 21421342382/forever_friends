@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:friendsforever/User/user.dart';
 import 'package:friendsforever/pages/Home.dart';
 import 'package:friendsforever/pages/login.dart';
 import 'package:get/get.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class login_controller extends GetxController{
   static bool image_selected = false;
@@ -47,7 +49,17 @@ class login_controller extends GetxController{
 
     }else{
       if(email[0]["password"] == password_controller.text){
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Home(user: email)), (route) => false);
+        user.name = email[0]["name"];
+        user.email = email[0]["email"];
+        user.password = email[0]["password"];
+        user.admin = email[0]["admin"];
+        user.profile = email[0]["profile"];
+        var query = where.eq('name', '${email[0]["email"]}');
+        var update  = modify.set('login', '1');
+        coll.updateOne(query, update);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString("Is_Logged_In", "true");
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Home()), (route) => false);
       }else{
         print("Account Not Found");
         Get.snackbar(

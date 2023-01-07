@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:friendsforever/pages/Home.dart';
 import 'package:friendsforever/pages/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +14,7 @@ class splash_controller {
         print("No Records Founds :(.....");
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => login_page()), (route) => false);
       }else{
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Home()), (route) => false);
         print("Records Found :)..");
       }
     });
